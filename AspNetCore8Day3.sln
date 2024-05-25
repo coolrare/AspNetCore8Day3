@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore8Day3", "AspNetCore8Day3\AspNetCore8Day3.csproj", "{7A76E38C-686D-497B-9467-AD664F57CDBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A76E38C-686D-497B-9467-AD664F57CDBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A76E38C-686D-497B-9467-AD664F57CDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A76E38C-686D-497B-9467-AD664F57CDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A76E38C-686D-497B-9467-AD664F57CDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1E40ABE2-218C-4CEC-9729-A897FC9110D4}
+	EndGlobalSection
+EndGlobal
