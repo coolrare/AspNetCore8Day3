@@ -1,4 +1,6 @@
+using AspNetCore8Day3.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCore8Day3.Controllers
 {
@@ -12,10 +14,17 @@ namespace AspNetCore8Day3.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IConfiguration configuration;
+        private readonly IOptions<AppSettingsOptions> options;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(
+            ILogger<WeatherForecastController> logger,
+            IConfiguration configuration,
+            IOptions<AppSettingsOptions> options)
         {
             _logger = logger;
+            this.configuration = configuration;
+            this.options = options;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
@@ -25,7 +34,8 @@ namespace AspNetCore8Day3.Controllers
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                //Summary = configuration.GetConnectionString("DefaultConnection")
+                Summary = options.Value.Smtp.SmtpIp + ":" + options.Value.Smtp.SmtpPort
             })
             .ToArray();
         }
