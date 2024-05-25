@@ -1,4 +1,5 @@
 using AspNetCore8Day3.Models;
+using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,24 +10,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Logging.AddSimpleConsole(options =>
-{
-    options.IncludeScopes = true;
-    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
-    options.UseUtcTimestamp = false;
-    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Enabled;
-});
+builder.Logging.ClearProviders();
 
-//builder.Logging.AddJsonConsole(options =>
+//builder.Logging.AddSimpleConsole(options =>
 //{
-//    options.IncludeScopes = true;
+//    options.c = true;
 //    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
 //    options.UseUtcTimestamp = false;
-//    options.JsonWriterOptions = new System.Text.Json.JsonWriterOptions()
-//    {
-//       Indented = true
-//    };
+//    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Enabled;
 //});
+
+//builder.Services.Configure<ConsoleFormatterOptions>(builder.Configuration.GetSection("Logging"))
+
+builder.Logging.AddJsonConsole(options =>
+{
+    // ¥]§t½d³ò¸ê°T
+    //options.IncludeScopes = true;
+
+    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+    options.UseUtcTimestamp = false;
+    options.JsonWriterOptions = new System.Text.Json.JsonWriterOptions()
+    {
+        Indented = true
+    };
+});
 
 //builder.Configuration.Sources.Clear();
 //builder.Configuration.AddJsonFile(
