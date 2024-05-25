@@ -9,9 +9,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Configuration.AddJsonFile(builder.Configuration.GetValue<string>("ExternalConfig")!);
+//builder.Configuration.Sources.Clear();
+//builder.Configuration.AddJsonFile(
+//    path: builder.Configuration.GetValue<string>("ExternalConfig")!,
+//    optional: true,
+//    reloadOnChange: true);
 
-builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection(AppSettingsOptions.AppSettings));
+//builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection(AppSettingsOptions.AppSettings));
+
+builder.Services.AddOptions<AppSettingsOptions>()
+    .Bind(builder.Configuration.GetSection(AppSettingsOptions.AppSettings))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 var app = builder.Build();
 

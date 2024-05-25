@@ -20,7 +20,7 @@ namespace AspNetCore8Day3.Controllers
         public WeatherForecastController(
             ILogger<WeatherForecastController> logger,
             IConfiguration configuration,
-            IOptions<AppSettingsOptions> options)
+            IOptionsSnapshot<AppSettingsOptions> options)
         {
             _logger = logger;
             this.configuration = configuration;
@@ -35,7 +35,7 @@ namespace AspNetCore8Day3.Controllers
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
                 TemperatureC = Random.Shared.Next(-20, 55),
                 //Summary = configuration.GetConnectionString("DefaultConnection")
-                Summary = options.Value.Smtp.SmtpIp + ":" + options.Value.Smtp.SmtpPort
+                Summary = options.Value.SmtpIp + ":" + options.Value.SmtpPort
             })
             .ToArray();
         }

@@ -1,17 +1,26 @@
-﻿namespace AspNetCore8Day3.Models;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class AppSettingsOptions
+namespace AspNetCore8Day3.Models;
+
+public class AppSettingsOptions : IValidatableObject
 {
     public const string AppSettings = "AppSettings";
 
-    public required string SomeKey { get; set; }
+    public string? SomeKey { get; set; }
 
-    public required SMTPOptions Smtp { get; set; }
-}
-
-public class SMTPOptions
-{
+    [Required]
+    [RegularExpression(@"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")]
     public required string SmtpIp { get; set; }
+
     public int SmtpPort { get; set; } = 589;
 
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (SmtpPort == 25 && SmtpIp.Length > 10)
+        {
+            yield return new ValidationResult("錯誤");
+        }
+
+        yield return ValidationResult.Success!;
+    }
 }

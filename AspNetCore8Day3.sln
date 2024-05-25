@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCore8Day3", "AspNetCore8Day3\AspNetCore8Day3.csproj", "{7A76E38C-686D-497B-9467-AD664F57CDBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore8Day3", "AspNetCore8Day3\AspNetCore8Day3.csproj", "{7A76E38C-686D-497B-9467-AD664F57CDBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
