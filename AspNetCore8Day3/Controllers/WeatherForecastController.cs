@@ -1,4 +1,4 @@
-using AspNetCore8Day3.Models;
+﻿using AspNetCore8Day3.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -28,8 +28,18 @@ namespace AspNetCore8Day3.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get(string? username)
         {
+            int error_login_times = 5;
+            error_login_times++;
+
+            _logger.LogTrace("Trace logged. Method = {methodName}", nameof(Get));
+            _logger.LogDebug("Debug logged.");
+            _logger.LogInformation("Information logged.");
+            _logger.LogWarning("✅ Security Warning logged: {user}, login times: {error_login_times}", username, error_login_times);
+            _logger.LogError("❌ Error logged. Login Times: " + error_login_times);
+            _logger.LogCritical($"❌ Critical logged. Login Times: {error_login_times}");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),

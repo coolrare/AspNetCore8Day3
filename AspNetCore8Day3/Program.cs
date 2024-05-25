@@ -9,6 +9,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = true;
+    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+    options.UseUtcTimestamp = false;
+    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Enabled;
+});
+
+//builder.Logging.AddJsonConsole(options =>
+//{
+//    options.IncludeScopes = true;
+//    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+//    options.UseUtcTimestamp = false;
+//    options.JsonWriterOptions = new System.Text.Json.JsonWriterOptions()
+//    {
+//       Indented = true
+//    };
+//});
+
 //builder.Configuration.Sources.Clear();
 //builder.Configuration.AddJsonFile(
 //    path: builder.Configuration.GetValue<string>("ExternalConfig")!,
