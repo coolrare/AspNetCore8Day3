@@ -1,64 +1,109 @@
 using AspNetCore8Day3.Models;
-using Microsoft.Extensions.Logging.Console;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 在 Console 專案需安裝 Microsoft.Extensions.Configuration 套件 (NuGet)
+//var configuration = new ConfigurationBuilder()
+//    .AddJsonFile("serilog.json", optional: false, reloadOnChange: true)
+//    .AddEnvironmentVariables()
+//    .Build();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
 
-builder.Logging.ClearProviders();
+    .WriteTo.Seq(serverUrl: "http://localhost:5341")
 
-//builder.Logging.AddSimpleConsole(options =>
-//{
-//    options.c = true;
-//    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
-//    options.UseUtcTimestamp = false;
-//    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Enabled;
-//});
+    //.WriteTo.File(
+    //    path: "logs/log.txt",
+    //    rollingInterval: RollingInterval.Day,
+    //    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+    //)
 
-//builder.Services.Configure<ConsoleFormatterOptions>(builder.Configuration.GetSection("Logging"))
+    //.WriteTo.MSSqlServer(
+    //    connectionString: configuration.GetConnectionString("DefaultConnection"),
+    //    sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents" })
 
-builder.Logging.AddJsonConsole(options =>
+    .CreateLogger();
+
+try
 {
-    // 包含範圍資訊
-    //options.IncludeScopes = true;
+    Log.Information("Starting web application");
 
-    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
-    options.UseUtcTimestamp = false;
-    options.JsonWriterOptions = new System.Text.Json.JsonWriterOptions()
+    #region ASP.NET Core 主程式
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add services to the container.
+
+    builder.Services.AddSerilog();
+    //builder.Logging.AddSerilog();
+
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Logging.ClearProviders();
+
+    //builder.Logging.AddSimpleConsole(options =>
+    //{
+    //    options.c = true;
+    //    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+    //    options.UseUtcTimestamp = false;
+    //    options.ColorBehavior = Microsoft.Extensions.Logging.Console.LoggerColorBehavior.Enabled;
+    //});
+
+    //builder.Services.Configure<ConsoleFormatterOptions>(builder.Configuration.GetSection("Logging"))
+
+    builder.Logging.AddJsonConsole(options =>
     {
-        Indented = true
-    };
-});
+        // 包含範圍資訊
+        //options.IncludeScopes = true;
 
-//builder.Configuration.Sources.Clear();
-//builder.Configuration.AddJsonFile(
-//    path: builder.Configuration.GetValue<string>("ExternalConfig")!,
-//    optional: true,
-//    reloadOnChange: true);
+        options.TimestampFormat = "yyyy-MM-dd HH:mm:ss ";
+        options.UseUtcTimestamp = false;
+        options.JsonWriterOptions = new System.Text.Json.JsonWriterOptions()
+        {
+            Indented = true
+        };
+    });
 
-//builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection(AppSettingsOptions.AppSettings));
+    //builder.Configuration.Sources.Clear();
+    //builder.Configuration.AddJsonFile(
+    //    path: builder.Configuration.GetValue<string>("ExternalConfig")!,
+    //    optional: true,
+    //    reloadOnChange: true);
 
-builder.Services.AddOptions<AppSettingsOptions>()
-    .Bind(builder.Configuration.GetSection(AppSettingsOptions.AppSettings))
-    .ValidateDataAnnotations()
-    .ValidateOnStart();
+    //builder.Services.Configure<AppSettingsOptions>(builder.Configuration.GetSection(AppSettingsOptions.AppSettings));
 
-var app = builder.Build();
+    builder.Services.AddOptions<AppSettingsOptions>()
+        .Bind(builder.Configuration.GetSection(AppSettingsOptions.AppSettings))
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var app = builder.Build();
+
+    app.UseSerilogRequestLogging();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+    #endregion
+
 }
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

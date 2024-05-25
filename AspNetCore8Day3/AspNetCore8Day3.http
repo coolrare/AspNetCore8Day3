@@ -4,3 +4,4 @@ GET {{AspNetCore8Day3_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
